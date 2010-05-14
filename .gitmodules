@@ -1,0 +1,6 @@
+[submodule "ext/JourneyPlannerParser"]
+	path = ext/JourneyPlannerParser
+	url = git://github.com/palfrey/JourneyPlannerParser.git
+[submodule "ext/Postcode"]
+	path = ext/Postcode
+	url = git://github.com/palfrey/postcode.git
