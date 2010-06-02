@@ -1,2 +1,6 @@
-gen
 bin
+*.apk
+.*.swp
+bin-stamp
+classes.dex
+.debug.keystore
