@@ -4,3 +4,4 @@ bin
 bin-stamp
 classes.dex
 .debug.keystore
+R.java
