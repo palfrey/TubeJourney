@@ -60,4 +60,4 @@ bin-stamp: bin $(BIN_FILES)
 
 $(BIN_FILES): $(SOURCE_FILES) $(R_PATH)
 	javac -source 1.5 -target 1.5 -cp $(PLATFORM_PATH)/android.jar \
-		-d bin $< $(SOURCE_FILES)
+		-d bin $< $(SOURCE_FILES) -Xlint:unchecked
