@@ -9,7 +9,7 @@ PLATFORM_PATH?=$(ANDROID)/platforms/android-$(ANDROID_NDK_VERSION)
 
 KEYSTORE?=.debug.keystore
 
-BIN_FILES=$(patsubst %.java, %.class, $(patsubst src/%,bin/%,$(SOURCE_FILES)))
+BIN_FILES=$(patsubst %.java, %.class, $(patsubst src/%,bin/%,$(SOURCE_FILES) $(if $(findstring $(R_PATH),$(SOURCE_FILES)),,$(R_PATH))))
 
 .PHONY: install all
 TARGET_FULLNAME = $(TARGET).apk
@@ -58,6 +58,6 @@ bin:
 bin-stamp: bin $(BIN_FILES)
 	touch $@
 
-$(BIN_FILES): $(SOURCE_FILES)
+$(BIN_FILES): $(SOURCE_FILES) $(R_PATH)
 	javac -source 1.5 -target 1.5 -cp $(PLATFORM_PATH)/android.jar \
 		-d bin $< $(SOURCE_FILES)
