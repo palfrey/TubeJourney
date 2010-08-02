@@ -56,6 +56,7 @@ public class TubeJourney extends Activity implements PostcodeListener {
 		final Button button = (Button) findViewById(R.id.btnDoJourney);
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				clearText();
 				LocationType start = types.get((String)typeStart.getSelectedItem()).first();
 				LocationType dest = types.get((String)typeDest.getSelectedItem()).first();
 
@@ -74,6 +75,12 @@ public class TubeJourney extends Activity implements PostcodeListener {
 	{
 		TextView tv = (TextView) findViewById(R.id.textLog);
 		tv.setText(tv.getText().toString()+text);
+	}
+
+	protected void clearText()
+	{
+		TextView tv = (TextView) findViewById(R.id.textLog);
+		tv.setText("");
 	}
 
 	public void postcodeChange(final String postcode)
