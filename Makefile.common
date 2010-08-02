@@ -67,3 +67,6 @@ $(BIN_FILES): $(SOURCE_WITH_R)
 clean::
 	rm -f $(BIN_FILES)
 	rm -f $(R_PATH)
+	rm -f *.apk
+	rm -f classes.dex bin-stamp
+	rm -Rf bin
