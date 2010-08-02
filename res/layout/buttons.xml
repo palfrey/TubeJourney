@@ -9,7 +9,7 @@
 	<Button
 		android:id="@+id/btnHome"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
+		android:layout_height="fill_parent"
 		android:text="Get me home"
 		android:textStyle="bold"
 	>
