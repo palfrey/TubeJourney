@@ -55,7 +55,6 @@ $(R_PATH): res/drawable/icon.png \
 
 bin:
 	mkdir -p $@
-	mkdir -p lib/armeabi
 
 bin-stamp: bin $(BIN_FILES)
 	touch $@
