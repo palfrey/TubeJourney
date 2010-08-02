@@ -49,26 +49,8 @@ public class TubeJourney extends Activity implements PostcodeListener {
 		typeDest = (Spinner) findViewById(R.id.typeDest);
 		typeDest.setAdapter(adapter);
 
-		typeStart.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			public void onItemSelected(AdapterView av, View v, int position, long id)
-			{
-				Pair<LocationType,String> data = types.get((String)av.getItemAtPosition(position));
-				if (data.second() == null)
-				{
-					textStart.setEnabled(true);
-				}
-				else
-				{
-					textStart.setText(data.second());
-					textStart.setEnabled(false);
-				}
-			}
-
-			public void onNothingSelected(AdapterView av)
-			{
-				textStart.setEnabled(true);
-			}
-		});
+		typeStart.setOnItemSelectedListener(new TypesSetter(types, textStart));
+		typeDest.setOnItemSelectedListener(new TypesSetter(types, textDest));
 
 		final TubeJourney self = this;
 		final Button button = (Button) findViewById(R.id.btnDoJourney);
