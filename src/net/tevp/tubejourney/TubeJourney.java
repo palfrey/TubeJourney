@@ -15,7 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
 import android.widget.EditText;
 
-import net.tevp.JourneyPlannerParser.*;
+import net.tevp.journeyplannerparser.*;
 import net.tevp.postcode.*;
 
 public class TubeJourney extends Activity implements PostcodeListener {

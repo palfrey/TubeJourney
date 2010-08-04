@@ -6,7 +6,7 @@ import android.widget.AdapterView;
 import android.view.View;
 import android.widget.EditText;
 
-import net.tevp.JourneyPlannerParser.*;
+import net.tevp.journeyplannerparser.LocationType;
 
 class TypesSetter implements AdapterView.OnItemSelectedListener
 {

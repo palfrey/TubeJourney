@@ -6,7 +6,7 @@ import java.util.Vector;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import net.tevp.JourneyPlannerParser.*;
+import net.tevp.journeyplannerparser.*;
 
 public class TubeJourneyTask extends AsyncTask<JourneyQuery, String, Vector<Journey>>
 {
