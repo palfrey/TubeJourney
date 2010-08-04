@@ -6,6 +6,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.view.View;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MenuInflater;
+import android.widget.LinearLayout;
+import android.view.KeyEvent;
 
 import net.tevp.journeyplannerparser.*;
 import net.tevp.postcode.*;
@@ -80,5 +85,38 @@ public class TubeJourney extends Activity implements PostcodeListener {
 		super.onSaveInstanceState(outState);
 		TextView tv = (TextView) findViewById(R.id.textLog);
 		outState.putString("tflOutput", tv.getText().toString());
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.options_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) 
+	{
+		switch (item.getItemId())
+		{
+			case R.id.locations_menu:
+				setContentView(R.layout.named_locations);
+				LinearLayout main = (LinearLayout)findViewById(R.id.layoutLocations);
+				main.setOnKeyListener(new View.OnKeyListener () {
+					public boolean onKey (View v, int keyCode, KeyEvent event)
+					{
+						if (keyCode == KeyEvent.KEYCODE_BACK)
+						{
+							setContentView(R.layout.main);
+							return true;
+						}
+						else
+							return false;
+					}
+				});
+				return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }

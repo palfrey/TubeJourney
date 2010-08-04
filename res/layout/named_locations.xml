@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+android:id="@+id/layoutLocations"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent"
+android:orientation="vertical"
+xmlns:android="http://schemas.android.com/apk/res/android"
+>
+	<TextView  
+		android:id="@+id/textInstructions"
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content" 
+		android:text="Use this dialog to add named locations you want to go to frequently"
+		android:textSize="18sp"
+		/>
+	<ListView
+		android:id="@+id/listLocations"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" />
+	<Button
+		android:id="@+id/btnNewLocation"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="Add new location"
+		android:textStyle="bold"
+		/>
+</LinearLayout>
+

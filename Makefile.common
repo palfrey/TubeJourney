@@ -41,14 +41,13 @@ $(TARGET)_unsigned.apk: classes.dex resources.apk
 classes.dex: bin-stamp
 	$(PLATFORM_PATH)/tools/dx --dex --verbose --output=$@ bin
 
-resources.apk: res/drawable/icon.png res/values/strings.xml \
-		$(wildcard res/layout/*.xml) AndroidManifest.xml $(wildcard res/values/*.xml)
+resources.apk: $(wildcard res/*) AndroidManifest.xml
 	$(PLATFORM_PATH)/tools/aapt package -f -M AndroidManifest.xml \
 		-S res -I $(PLATFORM_PATH)/android.jar -F $@
 
 $(R_PATH): res/drawable/icon.png \
 		AndroidManifest.xml \
-		res/values/* $(wildcard res/layout/*.xml)
+		res/values/* $(wildcard res/layout/*.xml) $(wildcard res/menu/*.xml)
 	$(PLATFORM_PATH)/tools/aapt package -m -J src \
 		-M AndroidManifest.xml -S res \
 		-I $(PLATFORM_PATH)/android.jar
