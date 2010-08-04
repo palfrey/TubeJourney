@@ -64,11 +64,11 @@ public class TubeJourney extends Activity implements PostcodeListener {
 				JourneyParameters jp = new JourneyParameters();
 				jp.speed = Speed.fast;
 				Log.d(TAG, "Doing TFL lookup");
+				appendText(jp.when.toString()+"\n");
 				JourneyQuery jq = jpp.doAsyncJourney(start.create(textStart.getText().toString()),dest.create(textDest.getText().toString()), jp);
 				new TubeJourneyTask(self).execute(jq);
 			 }
 		 });
-
 	}
 
 	protected void appendText(final String text)
