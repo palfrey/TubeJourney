@@ -26,8 +26,8 @@ public class TubeJourney extends Activity implements PostcodeListener {
 
 	/** Called when the activity is first created. */
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onCreate(Bundle inState) {
+		super.onCreate(inState);
 		setContentView(R.layout.main);
 
 		final LinkedHashMap<String,Pair<LocationType, String>> types = new LinkedHashMap<String,Pair<LocationType, String>>();
@@ -69,6 +69,12 @@ public class TubeJourney extends Activity implements PostcodeListener {
 				new TubeJourneyTask(self).execute(jq);
 			 }
 		 });
+
+		if (inState!=null && inState.containsKey("tflOutput"))
+		{
+			TextView tv = (TextView) findViewById(R.id.textLog);
+			tv.setText(inState.getString("tflOutput"));
+		}
 	}
 
 	protected void appendText(final String text)
@@ -94,5 +100,13 @@ public class TubeJourney extends Activity implements PostcodeListener {
 		Log.d(TAG, "Doing TFL lookup");
 		JourneyQuery jq = jpp.doAsyncJourney(LocationType.Postcode.create(postcode),LocationType.Postcode.create("E3 4AE"), jp);
 		new TubeJourneyTask(this).execute(jq);
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState)
+	{
+		super.onSaveInstanceState(outState);
+		TextView tv = (TextView) findViewById(R.id.textLog);
+		outState.putString("tflOutput", tv.getText().toString());
 	}
 }
