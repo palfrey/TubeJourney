@@ -2,7 +2,6 @@ package net.tevp.tubejourney;
 
 import java.util.LinkedHashMap;
 
-import android.view.View;
 import android.widget.Spinner;
 import android.widget.EditText;
 import android.widget.TableRow;
@@ -10,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.content.Context;
 import android.util.TypedValue;
 import android.util.AttributeSet;
+import android.text.TextWatcher;
+import android.widget.AdapterView;
 
 import net.tevp.journeyplannerparser.*;
 
@@ -74,5 +75,35 @@ public class LocationChooser extends TableRow
 	public LocationType location()
 	{
 		return types.get((String)spin.getSelectedItem()).first();
+	}
+
+	public void setLocation(LocationType lt)
+	{
+		int i = 0;
+		for (String s: types.keySet())
+		{
+			if (types.get(s).first() == lt)
+			{
+				spin.setSelection(i);
+				break;
+			}
+			else
+				i++;
+		}
+	}
+
+	public void setText(String text)
+	{
+		edit.setText(text);
+	}
+
+	public void addTextChangedListener(TextWatcher tw)
+	{
+		edit.addTextChangedListener(tw);
+	}
+
+	public void addSpinnerSelectedListener(AdapterView.OnItemSelectedListener ols)
+	{
+		spin.setOnItemSelectedListener(ols);
 	}
 }

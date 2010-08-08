@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.MenuInflater;
 import android.widget.LinearLayout;
 import android.view.KeyEvent;
+import android.content.Intent;
 
 import net.tevp.journeyplannerparser.*;
 import net.tevp.postcode.*;
@@ -30,7 +31,7 @@ public class TubeJourney extends Activity implements PostcodeListener {
 		locationDest = (LocationChooser) findViewById(R.id.locationDest);
 
 		final TubeJourney self = this;
-		final Button button = (Button) findViewById(R.id.btnDoJourney);
+		Button button = (Button) findViewById(R.id.btnDoJourney);
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				clearText();
@@ -101,20 +102,7 @@ public class TubeJourney extends Activity implements PostcodeListener {
 		switch (item.getItemId())
 		{
 			case R.id.locations_menu:
-				setContentView(R.layout.named_locations);
-				LinearLayout main = (LinearLayout)findViewById(R.id.layoutLocations);
-				main.setOnKeyListener(new View.OnKeyListener () {
-					public boolean onKey (View v, int keyCode, KeyEvent event)
-					{
-						if (keyCode == KeyEvent.KEYCODE_BACK)
-						{
-							setContentView(R.layout.main);
-							return true;
-						}
-						else
-							return false;
-					}
-				});
+				startActivity(new Intent(this, NamedLocations.class));
 				return true;
 		}
 		return super.onOptionsItemSelected(item);

@@ -11,6 +11,16 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		<activity android:name=".NamedLocations">
+			<intent-filter>
+				<category android:name="android.intent.category.PREFERENCES" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".NamedLocationEditor">
+			<intent-filter>
+				<category android:name="android.intent.category.PREFERENCES" />
+			</intent-filter>
+		</activity>
 	</application>
 	<uses-sdk android:minSdkVersion="3" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
