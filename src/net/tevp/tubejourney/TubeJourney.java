@@ -73,7 +73,6 @@ public class TubeJourney extends Activity implements PostcodeListener {
 		appendText("Got postcode " + postcode + "\n");
 		JourneyPlannerParser jpp = new JourneyPlannerParser(false);
 		JourneyParameters jp = new JourneyParameters();
-		//jp.when = new GregorianCalendar(2010, 5, 10, 0, 23).getTime();
 		jp.speed = Speed.fast;
 		Log.d(TAG, "Doing TFL lookup");
 		JourneyQuery jq = jpp.doAsyncJourney(LocationType.Postcode.create(postcode),LocationType.Postcode.create("E3 4AE"), jp);
