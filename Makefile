@@ -5,6 +5,7 @@ ANDROID ?= ../android-sdk-linux_86/
 ANDROID_VERSION=1.5
 
 TARGET = TubeJourney
+PACKAGE = net.tevp.tubejourney
 KEYSTORE=.debug.keystore
 R_PATH = src/net/tevp/tubejourney/R.java
 
