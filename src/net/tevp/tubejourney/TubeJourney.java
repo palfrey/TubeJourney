@@ -80,6 +80,9 @@ public class TubeJourney extends Activity implements PostcodeListener {
 	}
 
 	@Override
+	public void updatedLocation(android.location.Location l) {} // ignore location data, we want postcode
+
+	@Override
 	public void onSaveInstanceState(Bundle outState)
 	{
 		super.onSaveInstanceState(outState);
