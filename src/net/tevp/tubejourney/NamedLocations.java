@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.content.Intent;
 import android.widget.AdapterView;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import java.util.Set;
 
@@ -34,6 +37,7 @@ public class NamedLocations extends Activity
 		final NamedLocations self = this;
 
 		listLocations = (ListView)findViewById(R.id.listLocations);
+		registerForContextMenu(listLocations);
 		sp = getSharedPreferences("locations", MODE_PRIVATE);
 		setLocations();
 		sp.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener () {
@@ -57,5 +61,37 @@ public class NamedLocations extends Activity
 				startActivity(intent);
 			}
 		});
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+		if (v.getId() == R.id.listLocations) {
+			AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+			menu.setHeaderTitle("Actions");
+			menu.add(Menu.NONE, 0, 0, "Open");
+			menu.add(Menu.NONE, 1, 1, "Delete");
+		}
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+		int menuItemIndex = item.getItemId();
+		switch(menuItemIndex)
+		{
+			case 0: // open
+				Intent intent = new Intent(this, NamedLocationEditor.class);
+				intent.putExtra("location", keys[(int)info.id]);
+				startActivity(intent);
+				break;
+			case 1:
+				SharedPreferences.Editor edit = sp.edit();
+				edit.remove(keys[(int)info.id]);
+				edit.commit();
+				break;
+			default:
+				assert false;
+		}
+		return true;
 	}
 }
