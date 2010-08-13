@@ -5,22 +5,27 @@ import java.util.LinkedHashMap;
 import android.widget.Spinner;
 import android.widget.EditText;
 import android.widget.TableRow;
-import android.widget.ArrayAdapter;
 import android.content.Context;
 import android.util.TypedValue;
 import android.util.AttributeSet;
 import android.text.TextWatcher;
 import android.widget.AdapterView;
+import android.content.SharedPreferences;
+import android.util.Log;
+import android.database.DataSetObserver;
 
 import net.tevp.journeyplannerparser.*;
 
 public class LocationChooser extends TableRow
 {
+	public static final String TAG = "LocationChooser";
 	private EditText edit;
 	private Spinner spin;
 
+	private static LinkedHashMap<String,Pair<LocationType, String>> coreTypes = null;
 	private static LinkedHashMap<String,Pair<LocationType, String>> types = null;
-	private static ArrayAdapter<String> adapter = null;
+	private static ProxyAdapter<String> adapter = null;
+	private static SharedPreferences sp;
 
 	public LocationChooser(Context ctx)
 	{
@@ -34,21 +39,52 @@ public class LocationChooser extends TableRow
 		setup(ctx);
 	}
 
+	private static void updateAdapter()
+	{
+		Log.d(TAG, "Updating types");
+		types.clear();
+		for(String s: coreTypes.keySet())
+			types.put(s, coreTypes.get(s));
+		for(String name: sp.getAll().keySet())
+		{
+			String value = sp.getString(name, null);
+			if (value != null)
+			{
+				LocationType lt = Enum.valueOf(LocationType.class, value.substring(0,value.indexOf(",")));
+				String val = value.substring(value.indexOf(",")+1);
+				types.put(name, new Pair<LocationType, String>(lt, val));
+				Log.d(TAG, "Added "+name+" "+val);
+			}
+		}
+
+		adapter.setData(types.keySet());
+		TypesSetter.setTypes(types);
+		Log.d(TAG, "Types set");
+	}
+
 	private void setup(Context ctx)
 	{
-		if (types == null)
+		if (coreTypes == null)
 		{
 			types = new LinkedHashMap<String,Pair<LocationType, String>>();
+			coreTypes = new LinkedHashMap<String,Pair<LocationType, String>>();
 
-			types.put("Postcode", new Pair<LocationType, String>(LocationType.Postcode, null));
-			types.put("Stop", new Pair<LocationType, String>(LocationType.Stop, null));
-			types.put("Address", new Pair<LocationType, String>(LocationType.Address, null));
-			types.put("Place of Interest", new Pair<LocationType, String>(LocationType.PlaceOfInterest, null));
-			// FIXME: remove hard code
-			types.put("Home", new Pair<LocationType, String>(LocationType.Postcode, "E3 4AE"));
-
-			adapter = new ArrayAdapter<String>(ctx, android.R.layout.simple_spinner_item, types.keySet().toArray(new String[1]));
+			coreTypes.put("Postcode", new Pair<LocationType, String>(LocationType.Postcode, null));
+			coreTypes.put("Stop", new Pair<LocationType, String>(LocationType.Stop, null));
+			coreTypes.put("Address", new Pair<LocationType, String>(LocationType.Address, null));
+			coreTypes.put("Place of Interest", new Pair<LocationType, String>(LocationType.PlaceOfInterest, null));
+			
+			adapter = new ProxyAdapter<String>(ctx, android.R.layout.simple_spinner_item);
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+			sp = ctx.getSharedPreferences("locations", Context.MODE_PRIVATE);
+			sp.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener () {
+				public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
+				{
+					LocationChooser.updateAdapter();
+				}
+			});
+			updateAdapter();
 		}
 
 		spin = new Spinner(ctx);
@@ -63,8 +99,15 @@ public class LocationChooser extends TableRow
 		edit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
 		addView(edit, lp);
 
-		spin.setOnItemSelectedListener(new TypesSetter(types, edit));
+		final TypesSetter ts = new TypesSetter(edit);
+		spin.setOnItemSelectedListener(ts);
 		spin.setAdapter(adapter);
+		adapter.registerDataSetObserver(new DataSetObserver() {
+			public void onChanged()
+			{
+				ts.updateFromSelected(spin, spin.getSelectedItemPosition());
+			}
+		});
 	}
 
 	public String text()
