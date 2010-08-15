@@ -54,6 +54,7 @@ public class NamedLocationEditor extends Activity implements TextWatcher
 			}
 			public void onNothingSelected(AdapterView<?> parentView) {}
 		});
+		lc.setCoreOnly(true);
 	}
 
 	void storeChange()

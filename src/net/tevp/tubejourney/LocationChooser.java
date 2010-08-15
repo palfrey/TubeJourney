@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.database.DataSetObserver;
+import android.widget.ArrayAdapter;
 
 import net.tevp.journeyplannerparser.*;
 
@@ -25,6 +26,7 @@ public class LocationChooser extends TableRow
 	private static LinkedHashMap<String,Pair<LocationType, String>> coreTypes = null;
 	private static LinkedHashMap<String,Pair<LocationType, String>> types = null;
 	private static ProxyAdapter<String> adapter = null;
+	private static ArrayAdapter<String> coreAdapter = null;
 	private static SharedPreferences sp;
 
 	public LocationChooser(Context ctx)
@@ -76,6 +78,8 @@ public class LocationChooser extends TableRow
 			
 			adapter = new ProxyAdapter<String>(ctx, android.R.layout.simple_spinner_item);
 			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			coreAdapter = new ArrayAdapter<String>(ctx, android.R.layout.simple_spinner_item, coreTypes.keySet().toArray(new String[]{}));
+			coreAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 			sp = ctx.getSharedPreferences("locations", Context.MODE_PRIVATE);
 			sp.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener () {
@@ -148,5 +152,13 @@ public class LocationChooser extends TableRow
 	public void addSpinnerSelectedListener(AdapterView.OnItemSelectedListener ols)
 	{
 		spin.setOnItemSelectedListener(ols);
+	}
+
+	public void setCoreOnly(boolean core)
+	{	
+		if (core)
+			spin.setAdapter(coreAdapter);
+		else
+			spin.setAdapter(adapter);
 	}
 }
