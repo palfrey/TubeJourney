@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.widget.LinearLayout;
 import android.view.KeyEvent;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 
 import net.tevp.journeyplannerparser.*;
 import net.tevp.postcode.*;
@@ -26,6 +27,7 @@ public class TubeJourney extends Activity implements PostcodeListener {
 	public void onCreate(Bundle inState) {
 		super.onCreate(inState);
 		setContentView(R.layout.main);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 		locationStart = (LocationChooser) findViewById(R.id.locationStart);
 		locationDest = (LocationChooser) findViewById(R.id.locationDest);
