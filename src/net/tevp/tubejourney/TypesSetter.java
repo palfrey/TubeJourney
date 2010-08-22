@@ -36,6 +36,8 @@ class TypesSetter implements AdapterView.OnItemSelectedListener
 		Pair<LocationType,String> data = types.get((String)av.getItemAtPosition(position));
 		if (data.second() == null)
 		{
+			if (et.isEnabled() == false)
+				et.setText("");
 			et.setEnabled(true);
 		}
 		else
