@@ -12,11 +12,11 @@ public class TubeJourneyTask extends AsyncTask<JourneyQuery, String, Vector<Jour
 {
 	public static final String TAG = "TubeJourneyTask";
 
-	private TubeJourney tj;
+	private JourneyTaskHandler jth;
 	
-	public TubeJourneyTask(TubeJourney parent)
+	public TubeJourneyTask(JourneyTaskHandler parent)
 	{
-		tj = parent;
+		jth = parent;
 	}
 
 	protected Vector<Journey> doInBackground(JourneyQuery... jq)
@@ -62,6 +62,11 @@ public class TubeJourneyTask extends AsyncTask<JourneyQuery, String, Vector<Jour
 	protected void onProgressUpdate(String... values)
 	{
 		for (String s:values)
-			tj.appendText(s);
+			jth.addProgressText(s);
+	}
+
+	protected void onPostExecute (Vector<Journey> result)
+	{
+		jth.journeyComplete(result);
 	}
 }

@@ -13,11 +13,12 @@ import android.widget.LinearLayout;
 import android.view.KeyEvent;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import java.util.Vector;
 
 import net.tevp.journeyplannerparser.*;
 import net.tevp.postcode.*;
 
-public class TubeJourney extends Activity implements PostcodeListener {
+public class TubeJourney extends Activity implements PostcodeListener, JourneyTaskHandler {
 	public static final String TAG = "TubeJourney";
 
 	private LocationChooser locationStart, locationDest;
@@ -44,7 +45,7 @@ public class TubeJourney extends Activity implements PostcodeListener {
 				JourneyParameters jp = new JourneyParameters();
 				jp.speed = Speed.fast;
 				Log.d(TAG, "Doing TFL lookup");
-				appendText(jp.when.toString()+"\n");
+				addProgressText(jp.when.toString()+"\n");
 				JourneyQuery jq = jpp.doAsyncJourney(start.create(locationStart.text()),dest.create(locationDest.text()), jp);
 				new TubeJourneyTask(self).execute(jq);
 			 }
@@ -57,10 +58,14 @@ public class TubeJourney extends Activity implements PostcodeListener {
 		}
 	}
 
-	protected void appendText(final String text)
+	public void addProgressText(final String text)
 	{
 		TextView tv = (TextView) findViewById(R.id.textLog);
 		tv.setText(tv.getText().toString()+text);
+	}
+
+	public void journeyComplete(Vector<Journey> js)
+	{
 	}
 
 	protected void clearText()
@@ -72,7 +77,7 @@ public class TubeJourney extends Activity implements PostcodeListener {
 	public void postcodeChange(final String postcode)
 	{
 		Log.d(TAG, "Postcode change to "+postcode);
-		appendText("Got postcode " + postcode + "\n");
+		addProgressText("Got postcode " + postcode + "\n");
 		JourneyPlannerParser jpp = new JourneyPlannerParser(false);
 		JourneyParameters jp = new JourneyParameters();
 		jp.speed = Speed.fast;
