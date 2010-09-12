@@ -124,6 +124,11 @@ public class LocationChooser extends TableRow
 		return types.get((String)spin.getSelectedItem()).first();
 	}
 
+	public JourneyLocation createLocation()
+	{
+		return location().create(text());
+	}
+
 	public void setLocation(LocationType lt)
 	{
 		int i = 0;

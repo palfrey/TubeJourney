@@ -38,15 +38,12 @@ public class TubeJourney extends Activity implements PostcodeListener, JourneyTa
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				clearText();
-				LocationType start = locationStart.location();
-				LocationType dest = locationDest.location();
-
 				JourneyPlannerParser jpp = new JourneyPlannerParser(false);
 				JourneyParameters jp = new JourneyParameters();
 				jp.speed = Speed.fast;
 				Log.d(TAG, "Doing TFL lookup");
 				addProgressText(jp.when.toString()+"\n");
-				JourneyQuery jq = jpp.doAsyncJourney(start.create(locationStart.text()),dest.create(locationDest.text()), jp);
+				JourneyQuery jq = jpp.doAsyncJourney(locationStart.createLocation(),locationDest.createLocation(), jp);
 				new TubeJourneyTask(self).execute(jq);
 			 }
 		 });
