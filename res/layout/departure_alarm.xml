@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+android:layout_width="fill_parent"
+android:layout_height="fill_parent"
+android:orientation="vertical"
+xmlns:android="http://schemas.android.com/apk/res/android"
+>
+	<net.tevp.tubejourney.LocationChooser
+	android:id="@+id/locationDest"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	/>
+	<TimePicker
+	android:id="@+id/timeDest"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	/>
+	<Button
+		android:id="@+id/btnSetDestination"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="Set Destination"
+		android:textStyle="bold"
+		/>
+	<ScrollView
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" 
+		>
+		<TextView  
+			android:id="@+id/textLog"
+			android:layout_width="fill_parent" 
+			android:layout_height="fill_parent" 
+			/>
+	</ScrollView>
+</LinearLayout>

@@ -3,9 +3,18 @@
 	  package="net.tevp.tubejourney"
 	  android:versionCode="1"
 	  android:versionName="1.0">
-	<application android:icon="@drawable/icon" android:label="@string/tube_journey">
+	<application android:icon="@drawable/icon">
 		<activity android:name=".TubeJourney"
-			android:label="@string/tube_journey">
+			android:label="@string/tube_journey"
+			android:taskAffinity=".TubeJourney">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".DepartureAlarm"
+			android:label="@string/departure_alarm"
+			android:taskAffinity=".DepartureAlarm">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
