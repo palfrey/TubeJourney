@@ -84,6 +84,7 @@ public class DepartureAlarm extends Activity implements PostcodeListener, Journe
 		{
 			public void run()
 			{
+				clearText();
 				addProgressText("Got postcode " + postcode + "\n");
 			}
 		});
@@ -136,7 +137,6 @@ public class DepartureAlarm extends Activity implements PostcodeListener, Journe
 
 	public void journeyComplete(Vector<Journey> js)
 	{
-		clearText();
 		Journey latest = null;
 		if (js == null)
 			return;
