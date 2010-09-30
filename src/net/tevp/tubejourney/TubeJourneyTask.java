@@ -35,6 +35,11 @@ public class TubeJourneyTask extends AsyncTask<JourneyQuery, String, Vector<Jour
 			publishProgress(e.options.toString());
 			publishProgress(stack2string(e));
 		}
+		catch (DodgyLocationException e)
+		{
+			publishProgress(e.original.toString());
+			publishProgress(stack2string(e));
+		}
 		catch (ParseException e)
 		{
 			publishProgress(stack2string(e));
