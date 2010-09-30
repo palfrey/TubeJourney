@@ -61,6 +61,14 @@ public class TubeJourney extends Activity implements PostcodeListener, JourneyTa
 
 	public void journeyComplete(Vector<Journey> js)
 	{
+		for (int i=0;i<js.size();i++)
+		{
+			String text;
+			text = Integer.toString(i) + "\n";
+			text += js.get(i)+ "\n";
+			text += "\n";
+			addProgressText(text);
+		}
 	}
 
 	protected void clearText()
