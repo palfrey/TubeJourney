@@ -116,6 +116,9 @@ public class TubeJourney extends Activity implements PostcodeListener, JourneyTa
 			case R.id.locations_menu:
 				startActivity(new Intent(this, NamedLocations.class));
 				return true;
+			case R.id.departure_alarm:
+				startActivity(new Intent(this, DepartureAlarm.class));
+				return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}

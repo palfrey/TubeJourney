@@ -13,12 +13,7 @@
 			</intent-filter>
 		</activity>
 		<activity android:name=".DepartureAlarm"
-			android:label="@string/departure_alarm"
-			android:taskAffinity=".DepartureAlarm">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
+			android:label="@string/departure_alarm">
 		</activity>
 		<activity android:name=".NamedLocations">
 			<intent-filter>
