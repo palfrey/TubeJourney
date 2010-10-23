@@ -15,12 +15,14 @@
 		<activity android:name=".DepartureAlarm"
 			android:label="@string/departure_alarm">
 		</activity>
-		<activity android:name=".NamedLocations">
+		<activity android:name=".NamedLocations"
+				  android:label="@string/named_locations">
 			<intent-filter>
 				<category android:name="android.intent.category.PREFERENCES" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".NamedLocationEditor">
+		<activity android:name=".NamedLocationEditor"
+				  android:label="@string/named_location_editor">
 			<intent-filter>
 				<category android:name="android.intent.category.PREFERENCES" />
 			</intent-filter>

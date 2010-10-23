@@ -2,4 +2,6 @@
 <resources>
 	<string name="tube_journey">Tube Journey</string>
 	<string name="departure_alarm">Departure Alarm</string>
+	<string name="named_locations">Named Locations</string>
+	<string name="named_location_editor">Named Location Editor</string>
 </resources>
