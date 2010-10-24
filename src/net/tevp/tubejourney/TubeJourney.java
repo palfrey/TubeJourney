@@ -70,6 +70,8 @@ public class TubeJourney extends Activity implements JourneyTaskHandler {
 
 	public void journeyComplete(Vector<Journey> js)
 	{
+		if (js == null)
+			return;
 		for (int i=0;i<js.size();i++)
 		{
 			String text;
