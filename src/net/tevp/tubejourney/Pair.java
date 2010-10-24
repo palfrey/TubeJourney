@@ -4,8 +4,8 @@ import java.lang.*;
 import java.util.*; 
 
 public class Pair<TYPEA, TYPEB> implements Comparable< Pair<TYPEA, TYPEB> > {
-  protected final TYPEA first_;
-  protected final TYPEB second_;
+  protected TYPEA first_;
+  protected TYPEB second_;
 
   public Pair(TYPEA first, TYPEB second) {
     first_   = first;
@@ -14,8 +14,14 @@ public class Pair<TYPEA, TYPEB> implements Comparable< Pair<TYPEA, TYPEB> > {
   public TYPEA first() {
     return first_;
   }
+  public void setFirst(TYPEA newFirst) {
+	  first_ = newFirst;
+  }
   public TYPEB second() {
     return second_;
+  }
+  public void setSecond(TYPEB newSecond) {
+	  second_ = newSecond;
   }
   @Override
   public String toString() {

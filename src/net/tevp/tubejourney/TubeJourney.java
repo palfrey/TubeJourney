@@ -14,9 +14,8 @@ import android.content.pm.ActivityInfo;
 import java.util.Vector;
 
 import net.tevp.journeyplannerparser.*;
-import net.tevp.postcode.*;
 
-public class TubeJourney extends Activity implements PostcodeListener, JourneyTaskHandler {
+public class TubeJourney extends Activity implements JourneyTaskHandler {
 	public static final String TAG = "TubeJourney";
 
 	private LocationChooser locationStart, locationDest;
@@ -36,6 +35,16 @@ public class TubeJourney extends Activity implements PostcodeListener, JourneyTa
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				clearText();
+				if (!locationStart.locationReady())
+				{
+					addProgressText("Start location isn't available yet");
+					return;
+				}
+				if (!locationDest.locationReady())
+				{
+					addProgressText("Destination location isn't available yet");
+					return;
+				}
 				JourneyPlannerParser jpp = new JourneyPlannerParser(false);
 				JourneyParameters jp = new JourneyParameters();
 				jp.speed = Speed.fast;
@@ -76,21 +85,6 @@ public class TubeJourney extends Activity implements PostcodeListener, JourneyTa
 		TextView tv = (TextView) findViewById(R.id.textLog);
 		tv.setText("");
 	}
-
-	public void postcodeChange(final String postcode)
-	{
-		Log.d(TAG, "Postcode change to "+postcode);
-		addProgressText("Got postcode " + postcode + "\n");
-		JourneyPlannerParser jpp = new JourneyPlannerParser(false);
-		JourneyParameters jp = new JourneyParameters();
-		jp.speed = Speed.fast;
-		Log.d(TAG, "Doing TFL lookup");
-		JourneyQuery jq = jpp.doAsyncJourney(LocationType.Postcode.create(postcode),LocationType.Postcode.create("E3 4AE"), jp);
-		new TubeJourneyTask(this).execute(jq);
-	}
-
-	@Override
-	public void updatedLocation(android.location.Location l) {} // ignore location data, we want postcode
 
 	@Override
 	public void onSaveInstanceState(Bundle outState)

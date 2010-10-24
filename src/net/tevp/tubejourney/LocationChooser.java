@@ -14,14 +14,17 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.database.DataSetObserver;
 import android.widget.ArrayAdapter;
+import android.view.View;
 
 import net.tevp.journeyplannerparser.*;
+import net.tevp.postcode.*;
 
-public class LocationChooser extends TableRow
+public class LocationChooser extends TableRow implements PostcodeListener
 {
 	public static final String TAG = "LocationChooser";
 	private EditText edit;
 	private Spinner spin;
+	private static String postcode;
 
 	private static LinkedHashMap<String,Pair<LocationType, String>> coreTypes = null;
 	private static LinkedHashMap<String,Pair<LocationType, String>> types = null;
@@ -47,6 +50,7 @@ public class LocationChooser extends TableRow
 		types.clear();
 		for(String s: coreTypes.keySet())
 			types.put(s, coreTypes.get(s));
+		types.put("<Here>", new Pair<LocationType, String>(null, postcode));
 		for(String name: sp.getAll().keySet())
 		{
 			String value = sp.getString(name, null);
@@ -64,7 +68,7 @@ public class LocationChooser extends TableRow
 		Log.d(TAG, "Types set");
 	}
 
-	private void setup(Context ctx)
+	private void setup(final Context ctx)
 	{
 		if (coreTypes == null)
 		{
@@ -104,7 +108,6 @@ public class LocationChooser extends TableRow
 		addView(edit, lp);
 
 		final TypesSetter ts = new TypesSetter(edit);
-		spin.setOnItemSelectedListener(ts);
 		spin.setAdapter(adapter);
 		adapter.registerDataSetObserver(new DataSetObserver() {
 			public void onChanged()
@@ -112,12 +115,72 @@ public class LocationChooser extends TableRow
 				ts.updateFromSelected(spin, spin.getSelectedItemPosition());
 			}
 		});
+
+		final LocationChooser self = this;
+		setSpinnerSelectedListener(new AdapterView.OnItemSelectedListener() {
+			public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) 
+			{
+				if (location() == null) // postcode
+				{
+					postcode = null;
+					edit.setEnabled(false);
+					setPostcodeLookupEntry("Updating...");
+					new PostcodeBackend().getPostcode(ctx,self);
+				}
+				else
+					ts.onItemSelected(parentView, selectedItemView, position, id);
+			}
+			public void onNothingSelected(AdapterView<?> parentView) {}
+		});
+
 	}
 
 	public String text()
 	{
 		return edit.getText().toString();
 	}
+
+	public boolean locationReady()
+	{
+		if (location() != null) // not the postcode lookup
+			return true;
+		else
+			return postcode != null;
+	}
+
+	private void setPostcodeLookupEntry(String text)
+	{
+		for(String s: types.keySet())
+		{
+			Pair<LocationType, String> p = types.get(s);
+			if (p.first() == null) // the lookup
+			{
+				p.setSecond(text);
+				adapter.setData(types.keySet());
+				TypesSetter.setTypes(types);
+				if (location() == null)
+					setText(text);
+				break;
+			}
+		}
+	}
+
+	@Override
+	public void postcodeChange(final String newPostcode)
+	{
+		postcode = newPostcode;
+		Log.d(TAG, "Postcode change to "+postcode);
+		post(new Runnable()
+		{
+			public void run()
+			{
+				setPostcodeLookupEntry(postcode);
+			}
+		});
+	}
+
+	@Override
+	public void updatedLocation(android.location.Location l) {} // ignore location data, we want postcode
 
 	public LocationType location()
 	{
@@ -126,7 +189,14 @@ public class LocationChooser extends TableRow
 
 	public JourneyLocation createLocation()
 	{
-		return location().create(text());
+		if (!locationReady())
+			return null;
+
+		LocationType lt = location();
+		if (lt == null)
+			return LocationType.Postcode.create(postcode);
+		else
+			return lt.create(text());
 	}
 
 	public void setLocation(LocationType lt)
@@ -154,7 +224,7 @@ public class LocationChooser extends TableRow
 		edit.addTextChangedListener(tw);
 	}
 
-	public void addSpinnerSelectedListener(AdapterView.OnItemSelectedListener ols)
+	public void setSpinnerSelectedListener(AdapterView.OnItemSelectedListener ols)
 	{
 		spin.setOnItemSelectedListener(ols);
 	}

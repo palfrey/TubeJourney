@@ -47,7 +47,7 @@ public class NamedLocationEditor extends Activity implements TextWatcher
 
 		editName.addTextChangedListener(this);
 		lc.addTextChangedListener(this);
-		lc.addSpinnerSelectedListener(new AdapterView.OnItemSelectedListener() {
+		lc.setSpinnerSelectedListener(new AdapterView.OnItemSelectedListener() {
 			public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) 
 			{
 				storeChange();
