@@ -24,7 +24,7 @@ public class TubeJourneyTask extends AsyncTask<JourneyQuery, String, Vector<Jour
 		try
 		{
 			Log.d(TAG, "Doing TFL lookup");
-			Vector<Journey> js = jq[0].run();
+			Vector<Journey> js = new JourneyPlannerParser(false).runAsyncJourney(jq[0]);
 			Log.d(TAG, "TFL lookup complete, got "+Integer.toString(js.size())+" results");
 			assert js.size()!=0;
 			return js;

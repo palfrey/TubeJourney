@@ -3,7 +3,6 @@ package net.tevp.tubejourney;
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.TextView;
 import android.view.View;
 import android.util.Log;
 import android.view.Menu;
@@ -11,11 +10,12 @@ import android.view.MenuItem;
 import android.view.MenuInflater;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import java.util.Vector;
+import android.content.Context;
+import android.widget.Toast;
 
 import net.tevp.journeyplannerparser.*;
 
-public class TubeJourney extends Activity implements JourneyTaskHandler {
+public class TubeJourney extends Activity {
 	public static final String TAG = "TubeJourney";
 
 	private LocationChooser locationStart, locationDest;
@@ -34,66 +34,32 @@ public class TubeJourney extends Activity implements JourneyTaskHandler {
 		Button button = (Button) findViewById(R.id.btnDoJourney);
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				clearText();
 				if (!locationStart.locationReady())
 				{
-					addProgressText("Start location isn't available yet");
+					toastText("Start location isn't available yet");
 					return;
 				}
 				if (!locationDest.locationReady())
 				{
-					addProgressText("Destination location isn't available yet");
+					toastText("Destination location isn't available yet");
 					return;
 				}
-				JourneyPlannerParser jpp = new JourneyPlannerParser(false);
 				JourneyParameters jp = new JourneyParameters();
 				jp.speed = Speed.fast;
 				Log.d(TAG, "Doing TFL lookup");
-				addProgressText(jp.when.toString()+"\n");
-				JourneyQuery jq = jpp.doAsyncJourney(locationStart.createLocation(),locationDest.createLocation(), jp);
-				new TubeJourneyTask(self).execute(jq);
+				JourneyQuery jq = JourneyPlannerParser.doAsyncJourney(locationStart.createLocation(),locationDest.createLocation(), jp);
+				Intent intent = new Intent(self, JourneyResults.class);
+				intent.putExtra("query", jq);
+				startActivity(intent);
 			 }
 		 });
 
-		if (inState!=null && inState.containsKey("tflOutput"))
-		{
-			TextView tv = (TextView) findViewById(R.id.textLog);
-			tv.setText(inState.getString("tflOutput"));
-		}
 	}
 
-	public void addProgressText(final String text)
+	private void toastText(String text)
 	{
-		TextView tv = (TextView) findViewById(R.id.textLog);
-		tv.setText(tv.getText().toString()+text);
-	}
-
-	public void journeyComplete(Vector<Journey> js)
-	{
-		if (js == null)
-			return;
-		for (int i=0;i<js.size();i++)
-		{
-			String text;
-			text = Integer.toString(i) + "\n";
-			text += js.get(i)+ "\n";
-			text += "\n";
-			addProgressText(text);
-		}
-	}
-
-	protected void clearText()
-	{
-		TextView tv = (TextView) findViewById(R.id.textLog);
-		tv.setText("");
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState)
-	{
-		super.onSaveInstanceState(outState);
-		TextView tv = (TextView) findViewById(R.id.textLog);
-		outState.putString("tflOutput", tv.getText().toString());
+		Context context = getApplicationContext();
+		Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
 	}
 
 	@Override

@@ -4,4 +4,5 @@
 	<string name="departure_alarm">Departure Alarm</string>
 	<string name="named_locations">Named Locations</string>
 	<string name="named_location_editor">Named Location Editor</string>
+	<string name="journey_results">Journey Results</string>
 </resources>
