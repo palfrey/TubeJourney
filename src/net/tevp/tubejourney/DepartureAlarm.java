@@ -153,4 +153,9 @@ public class DepartureAlarm extends Activity implements PostcodeListener, Journe
 			return;
 		addProgressText(latest.toString());
 	}
+
+	@Override
+	public void postcodeLookupFail() {} // ignore
+	@Override
+	public void locationFindFail() {} // ignore
 }

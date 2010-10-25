@@ -236,4 +236,10 @@ public class LocationChooser extends TableRow implements PostcodeListener
 		else
 			spin.setAdapter(adapter);
 	}
+
+	@Override
+	public void postcodeLookupFail() {} // ignore
+	@Override
+	public void locationFindFail() {} // ignore
+
 }
