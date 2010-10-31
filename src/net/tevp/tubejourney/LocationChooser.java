@@ -1,6 +1,8 @@
 package net.tevp.tubejourney;
 
 import java.util.LinkedHashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.widget.Spinner;
 import android.widget.EditText;
@@ -32,6 +34,9 @@ public class LocationChooser extends TableRow implements PostcodeListener
 	private static ArrayAdapter<String> coreAdapter = null;
 	private static SharedPreferences sp;
 
+	private boolean updating = true, gettingPostcode = false;
+	private Timer updater = null;
+
 	public LocationChooser(Context ctx)
 	{
 		super(ctx);
@@ -42,6 +47,38 @@ public class LocationChooser extends TableRow implements PostcodeListener
 	{
 		super(ctx,as);
 		setup(ctx);
+	}
+
+	public void setUpdating(boolean up)
+	{
+		updating = up;
+		runUpdater();
+	}
+
+	public void runUpdater()
+	{
+		if (updater == null && updating && location() == null)
+		{
+			updater = new Timer();
+			final LocationChooser self = this;
+			updater.scheduleAtFixedRate(new TimerTask()
+			{
+				public void run()
+				{
+					if (self.updating && !self.gettingPostcode)
+					{
+						self.gettingPostcode = true;
+						new PostcodeBackend().getPostcode(getContext(),self);
+					}
+				}
+			},0, 1000*60);
+		}
+		else if (updater!=null && (!updating || location()!=null))
+		{
+			updater.cancel();
+			updater = null;
+			gettingPostcode = false;
+		}
 	}
 
 	private static void updateAdapter()
@@ -125,10 +162,10 @@ public class LocationChooser extends TableRow implements PostcodeListener
 					postcode = null;
 					edit.setEnabled(false);
 					setPostcodeLookupEntry("Updating...");
-					new PostcodeBackend().getPostcode(ctx,self);
 				}
 				else
 					ts.onItemSelected(parentView, selectedItemView, position, id);
+				runUpdater();
 			}
 			public void onNothingSelected(AdapterView<?> parentView) {}
 		});
@@ -168,6 +205,7 @@ public class LocationChooser extends TableRow implements PostcodeListener
 	@Override
 	public void postcodeChange(final String newPostcode)
 	{
+		gettingPostcode = false;
 		postcode = newPostcode;
 		Log.d(TAG, "Postcode change to "+postcode);
 		post(new Runnable()
@@ -177,6 +215,7 @@ public class LocationChooser extends TableRow implements PostcodeListener
 				setPostcodeLookupEntry(postcode);
 			}
 		});
+		runUpdater();
 	}
 
 	@Override

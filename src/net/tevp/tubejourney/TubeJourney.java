@@ -56,6 +56,22 @@ public class TubeJourney extends Activity {
 
 	}
 
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		locationStart.setUpdating(true);
+		locationDest.setUpdating(true);
+	}
+
+	@Override
+	public void onPause()
+	{
+		super.onPause();
+		locationStart.setUpdating(false);
+		locationDest.setUpdating(false);
+	}
+
 	private void toastText(String text)
 	{
 		Context context = getApplicationContext();
