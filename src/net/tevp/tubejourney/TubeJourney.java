@@ -49,7 +49,7 @@ public class TubeJourney extends Activity {
 				Log.d(TAG, "Doing TFL lookup");
 				JourneyQuery jq = JourneyPlannerParser.doAsyncJourney(locationStart.createLocation(),locationDest.createLocation(), jp);
 				Intent intent = new Intent(self, JourneyResults.class);
-				intent.putExtra("query", jq);
+				intent.putExtra("query", new ParcelableJourneyQuery(jq));
 				startActivity(intent);
 			 }
 		 });
