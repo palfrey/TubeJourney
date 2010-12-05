@@ -26,7 +26,9 @@ public class LocationChooser extends TableRow implements PostcodeListener
 	public static final String TAG = "LocationChooser";
 	private EditText edit;
 	private Spinner spin;
-	private static String postcode;
+
+	private static double latitude, longitude;
+	private static String displayCoordinates;
 
 	private static LinkedHashMap<String,Pair<LocationType, String>> coreTypes = null;
 	private static LinkedHashMap<String,Pair<LocationType, String>> types = null;
@@ -87,7 +89,7 @@ public class LocationChooser extends TableRow implements PostcodeListener
 		types.clear();
 		for(String s: coreTypes.keySet())
 			types.put(s, coreTypes.get(s));
-		types.put("<Here>", new Pair<LocationType, String>(null, postcode));
+		types.put("<Here>", new Pair<LocationType, String>(null, displayCoordinates));
 		for(String name: sp.getAll().keySet())
 		{
 			String value = sp.getString(name, null);
@@ -159,9 +161,9 @@ public class LocationChooser extends TableRow implements PostcodeListener
 			{
 				if (location() == null) // postcode
 				{
-					postcode = null;
+					displayCoordinates = null;
 					edit.setEnabled(false);
-					setPostcodeLookupEntry("Updating...");
+					setHereLookupEntry("Updating...");
 				}
 				else
 					ts.onItemSelected(parentView, selectedItemView, position, id);
@@ -182,10 +184,10 @@ public class LocationChooser extends TableRow implements PostcodeListener
 		if (location() != null) // not the postcode lookup
 			return true;
 		else
-			return postcode != null;
+			return displayCoordinates != null;
 	}
 
-	private void setPostcodeLookupEntry(String text)
+	private void setHereLookupEntry(String text)
 	{
 		for(String s: types.keySet())
 		{
@@ -203,23 +205,26 @@ public class LocationChooser extends TableRow implements PostcodeListener
 	}
 
 	@Override
-	public void postcodeChange(final String newPostcode)
+	public void postcodeChange(final String newPostcode) {} // using location data, not postcode
+
+	@Override
+	public void updatedLocation(android.location.Location l)
 	{
 		gettingPostcode = false;
-		postcode = newPostcode;
-		Log.d(TAG, "Postcode change to "+postcode);
+		latitude = l.getLatitude();
+		longitude = l.getLongitude();
+		displayCoordinates = String.format("%f,%f", latitude, longitude);
+		Log.d(TAG, "Location change to "+displayCoordinates);
 		post(new Runnable()
 		{
 			public void run()
 			{
-				setPostcodeLookupEntry(postcode);
+				setHereLookupEntry(displayCoordinates);
 			}
 		});
 		runUpdater();
+	
 	}
-
-	@Override
-	public void updatedLocation(android.location.Location l) {} // ignore location data, we want postcode
 
 	public LocationType location()
 	{
@@ -233,7 +238,7 @@ public class LocationChooser extends TableRow implements PostcodeListener
 
 		LocationType lt = location();
 		if (lt == null)
-			return LocationType.Postcode.create(postcode);
+			return LocationType.createCoordinate(latitude, longitude);
 		else
 			return lt.create(text());
 	}
