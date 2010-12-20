@@ -45,6 +45,12 @@
         classname="com.android.ant.SetupTask"
         classpathref="android.antlibs" />
 
+	<target name="log">
+		<exec executable="${sdk.dir}/tools/adb">
+			<arg value="logcat" />
+		</exec>
+	</target>
+
 <!-- extension targets. Uncomment the ones where you want to do custom work
      in between standard targets -->
 <!--
