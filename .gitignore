@@ -1,7 +1,6 @@
 bin
 *.apk
-.*.swp
-bin-stamp
+*.swp
 classes.dex
-.debug.keystore
-R.java
+local.properties
+gen
