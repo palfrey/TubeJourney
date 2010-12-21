@@ -41,6 +41,10 @@
         <pathelement path="${sdk.dir}/tools/lib/androidprefs.jar" />
 	</path>
 
+	<path id="ext.path">
+		<fileset dir="ext" includes="*.jar" />
+	</path>
+
     <taskdef name="setup"
         classname="com.android.ant.SetupTask"
         classpathref="android.antlibs" />
@@ -49,6 +53,43 @@
 		<exec executable="${sdk.dir}/tools/adb">
 			<arg value="logcat" />
 		</exec>
+	</target>
+
+	<target name="compile.tests" depends="compile"
+            description="compile module source; test classes" unless="skip.tests">
+		<mkdir dir="bin/tests"/>
+
+        <javac encoding="ascii" source="1.6" target="1.6" debug="true" extdirs=""
+			destdir="bin/tests"
+               verbose="${verbose}" classpathref="ext.path">
+            <src path="test"/>
+			<classpath refid="ext.path" />
+        </javac>
+    </target>
+
+    <target name="clean" depends="android_rules.clean" description="cleanup module">
+		<delete dir="bin/tests"/>
+    </target>
+	
+	<target name="test" depends="compile.tests">
+		<mkdir dir="test/out"/>
+		<junit showoutput="true" failureproperty="junit.failure">
+			<classpath>
+				<path refid="ext.path" />
+				<pathelement path="bin/tests" />
+				<pathelement path="bin/classes" />
+				<path refid="android.target.classpath" />
+			</classpath>
+				
+			<formatter type="plain" usefile="false" />
+			<formatter type="plain" usefile="true" />
+			<batchtest todir="test/out">
+				<fileset dir="test">
+					<include name="**/*Test*.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+		<fail if="junit.failure" message="Unit test(s) failed.  See reports!"/>
 	</target>
 
 <!-- extension targets. Uncomment the ones where you want to do custom work
